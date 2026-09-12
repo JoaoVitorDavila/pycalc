@@ -6,9 +6,12 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         python3 \
         python3-pip \
-        curl && \
+        curl \
+        openssh-client && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
+
+RUN pip3 install --break-system-packages ansible
 
 RUN curl -fsSL https://download.docker.com/linux/static/stable/x86_64/docker-28.4.0.tgz -o /tmp/docker.tgz && \
     tar -xzf /tmp/docker.tgz -C /tmp && \

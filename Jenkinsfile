@@ -38,13 +38,11 @@ pipeline {
 
         stage('Deploy to AWS with Ansible') {
             steps {
-                sh 'docker build -t local-ansible ./ansible'
-                sh """
-                  docker run --rm \
-                    -v ${WORKSPACE}:/ansible \
-                    -v /var/jenkins_home/pycalc-key.pem:/ansible/pycalc-key.pem:ro \
-                    local-ansible -i ansible/inventory.ini ansible/deploy.yml -e image_tag=${IMAGE_TAG}
-                """
+                sh '''
+                  cp /var/jenkins_home/pycalc-key.pem /tmp/pycalc-key.pem
+                  chmod 600 /tmp/pycalc-key.pem
+                  ansible-playbook -i ansible/inventory.ini ansible/deploy.yml -e image_tag=$IMAGE_TAG
+                '''
             }
         }
     }
