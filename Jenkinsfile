@@ -15,15 +15,10 @@ pipeline {
             }
         }
 
-        stage('Install dependencies') {
+        stage('Install & test') {
             steps {
                 sh 'pip3 install --break-system-packages -r requirements.txt'
-            }
-        }
-
-        stage('Run tests') {
-            steps {
-                sh 'cd app && python3 -m pytest tests/ -v'
+                sh 'cd app && python3 -m pytest tests/'
             }
         }
 
@@ -44,9 +39,9 @@ pipeline {
         stage('Deploy to AWS with Ansible') {
             steps {
                 sh '''
-                    cp /var/jenkins_home/pycalc-key.pem /tmp/pycalc-key.pem
-                    chmod 600 /tmp/pycalc-key.pem
-                    ansible-playbook -i ansible/inventory.ini ansible/deploy.yml -e image_tag=$IMAGE_TAG
+                  cp /var/jenkins_home/pycalc-key.pem /tmp/pycalc-key.pem
+                  chmod 600 /tmp/pycalc-key.pem
+                  ansible-playbook -i ansible/inventory.ini ansible/deploy.yml -e image_tag=$IMAGE_TAG
                 '''
             }
         }
