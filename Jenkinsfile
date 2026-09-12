@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
-        DOCKERHUB_USER = 'joaovitordavila'
+        DOCKERHUB_USER = 'jvdavila'
         IMAGE_NAME = "${DOCKERHUB_USER}/pycalc"
         IMAGE_TAG = "${BUILD_NUMBER}"
     }
