@@ -49,7 +49,7 @@ pipeline {
 
     post {
         success {
-            echo "Deploy finished! Visit http://[56.124.16.161:30080"
+            echo "Deploy finished! Visit http://56.124.16.161:30080"
         }
         failure {
             echo "Pipeline failed — check the stage logs above."
