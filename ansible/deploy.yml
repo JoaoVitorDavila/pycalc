@@ -1,0 +1,28 @@
+---
+- name: Deploy PyCalc to the Kubernetes cluster
+  hosts: aws_server
+  become: true
+  vars:
+    image_tag: latest
+  tasks:
+    - name: Copy Kubernetes manifests to the server
+      copy:
+        src: "{{ item }}"
+        dest: "/home/ubuntu/{{ item | basename }}"
+      loop:
+        - ../k8s/deployment.yaml
+        - ../k8s/service.yaml
+
+    - name: Apply the manifests
+      command: k3s kubectl apply -f /home/ubuntu/{{ item }}
+      loop:
+        - deployment.yaml
+        - service.yaml
+
+    - name: Update the image to the requested tag
+      command: >
+        k3s kubectl set image deployment/pycalc
+        pycalc=jvdavila/pycalc:{{ image_tag }}
+
+    - name: Wait for the rollout to finish
+      command: k3s kubectl rollout status deployment/pycalc --timeout=120s

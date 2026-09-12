@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pycalc
+  labels:
+    app: pycalc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pycalc
+  template:
+    metadata:
+      labels:
+        app: pycalc
+    spec:
+      containers:
+        - name: pycalc
+          image: jvdavila/pycalc:latest
+          ports:
+            - containerPort: 5000
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 10
